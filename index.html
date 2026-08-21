@@ -4,6 +4,16 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <title>I'M FINE ⚪</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#E891A0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="奶油工作台">
+<link rel="apple-touch-icon" href="icon.svg">
+<script>
+window.addEventListener('load',function(){if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){});}});
+</script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -108,7 +118,7 @@ body{font-family:"幼圆","PingFang SC","Microsoft YaHei",sans-serif;background:
 /* ===== Pages ===== */
 .page{display:none;padding:0 20px 60px;touch-action:pan-y;overscroll-behavior-x:contain}
 .page.active{display:block;flex:1;min-height:0;overflow-y:auto}
-#pgLand.active{display:flex;flex-direction:column;padding-bottom:160px}
+#pgLand.active{display:flex;flex-direction:column;padding-bottom:0}
 @keyframes pageInR{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
 @keyframes pageInL{from{opacity:0;transform:translateX(-30px)}to{opacity:1;transform:translateX(0)}}
 .page.pi-r{animation:pageInR .28s cubic-bezier(.22,.61,.36,1)}
@@ -119,7 +129,7 @@ body{font-family:"幼圆","PingFang SC","Microsoft YaHei",sans-serif;background:
 #tlList{flex:1;overflow-y:auto;min-height:0;-webkit-overflow-scrolling:touch}
 #pgLand .land-greet{flex-shrink:0}
 #pgLand .land-area{flex-shrink:0;margin-bottom:0}
-#pgLand .dm-enter{position:fixed;bottom:64px;left:50%;transform:translateX(-50%);width:100%;max-width:440px;display:flex;justify-content:center;z-index:45;margin:0}
+#pgLand .dm-enter{width:100%;max-width:440px;display:flex;justify-content:center;z-index:45;margin:16px auto calc(86px + env(safe-area-inset-bottom,0px))}
 #pgLand .btm-bar{flex-shrink:0}
 
 /* ===== 启动页 ===== */
@@ -138,9 +148,9 @@ body{font-family:"幼圆","PingFang SC","Microsoft YaHei",sans-serif;background:
 .bc{position:absolute;top:0;left:0;width:100%;height:100%;background:#FFF8EE;border-radius:28px;border:none;padding:26px 24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:9px;opacity:0;transform:scale(.96) translateY(8px);transition:opacity .32s ease,transform .32s ease,box-shadow .32s ease;pointer-events:none;box-shadow:0 14px 34px rgba(218,166,174,.10)}
 .bc.active{opacity:1;transform:scale(1) translateY(0);pointer-events:auto;box-shadow:0 18px 40px rgba(218,166,174,.14)}
 .bc::before{content:"";position:absolute;top:18px;left:50%;transform:translateX(-50%);padding:4px 16px;border-radius:999px;background:#FFC1DA;color:#8A5C69;font-size:11px;letter-spacing:2px;font-weight:700}
-#bc0{background:#FFF8EE}
+#bc0{background:#FFF8EE;justify-content:flex-start;padding:18px 24px}
 #bc0::before{display:none}
-#bc0 .bc-ic{background:transparent;border-radius:0;box-shadow:none;margin:0 0 10px}
+#bc0 .bc-ic{background:transparent;border-radius:0;box-shadow:none;margin:0 0 10px;width:84px;height:84px}
 .bc-ic{width:108px;height:108px;margin:14px 0 10px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.58);border-radius:50%;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,193,218,.42)}
 .bc-ic img{max-width:100%;max-height:100%;object-fit:cover;mix-blend-mode:multiply}
 .bc-lb{font-size:11px;color:#8A5C69;background:#FFC1DA;padding:5px 15px;border-radius:999px;letter-spacing:2px;margin-bottom:5px;font-weight:700;display:inline-block}
@@ -609,8 +619,8 @@ function rLand(){
   lci=0;loadQt();
   const ls=document.getElementById('ls');
   let sy=0,sx=0;
-  ls.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;sx=e.touches[0].clientX},{passive:true});
-  ls.addEventListener('touchend',e=>{e.preventDefault()},{passive:false});
+  ls.addEventListener('touchstart',e=>{sy=e.touches[0].clientY;sx=e.touches[0].clientX;},{passive:true});
+  ls.addEventListener('touchend',e=>{const t=e.changedTouches[0];if(Math.abs((t?t.clientY:sy)-sy)>10||Math.abs((t?t.clientX:sx)-sx)>10){e.preventDefault();}},{passive:false});
   if(landCal){const bc=document.getElementById('bc0');if(bc){bc.classList.add('show-cal');renderLandCal();}}
 }
 function wheelCards(e){e.preventDefault()}
@@ -971,7 +981,7 @@ function loadQt(){
   const q=qts[idx];document.getElementById('bc0').querySelector('.bc-tl').textContent=q.cn||q.en;
   if(q.cn){document.getElementById('bc0').querySelector('.bc-dt').innerHTML=`<div style="color:var(--text-light);font-size:12px">"${q.en}" <span onclick="spkQt(event,'${q.en.replace(/'/g,"\\'")}')" style="cursor:pointer;display:inline-block;vertical-align:middle;margin-left:4px" title="朗读"><svg viewBox="0 0 22 22" width="18" height="18"><path d="M11 18 Q5 13 4 10 Q3 7 6 5 Q9 3 11 6 Q13 3 16 5 Q19 7 18 10 Q17 13 11 18Z" fill="#E891A0" stroke="#F0B4C0" stroke-width="0.8"/></svg></span></div>`}else{document.getElementById('bc0').querySelector('.bc-dt').innerHTML=`<div style="color:var(--text-light);font-size:12px"><span onclick="spkQt(event,'${q.en.replace(/'/g,"\\'")}')" style="cursor:pointer;display:inline-block;vertical-align:middle" title="朗读英文">🔊 <svg viewBox="0 0 22 22" width="18" height="18"><path d="M11 18 Q5 13 4 10 Q3 7 6 5 Q9 3 11 6 Q13 3 16 5 Q19 7 18 10 Q17 13 11 18Z" fill="#E891A0" stroke="#F0B4C0" stroke-width="0.8"/></svg></span> 朗读英文</div>`}
 }
-function spkQt(e,q){e.stopPropagation();if('speechSynthesis' in window){const u=new SpeechSynthesisUtterance(q);u.lang='en-US';u.rate=.9;speechSynthesis.speak(u)}}
+function spkQt(e,q){e.stopPropagation();if(!('speechSynthesis' in window)){alert('当前浏览器不支持语音朗读 ⚪\n请用 Chrome 打开工作台网址再试');return;}speechSynthesis.cancel();try{speechSynthesis.resume();}catch(_){}const u=new SpeechSynthesisUtterance(q);u.lang='en-US';u.rate=.9;u.onerror=function(){alert('语音播放失败：可能是系统缺少英文语音包，建议用 Chrome 打开');};const vs=speechSynthesis.getVoices();if(vs.length===0){speechSynthesis.onvoiceschanged=function(){speechSynthesis.speak(u);};}else{speechSynthesis.speak(u);}}
 
 /* ===== Today Page ===== */
 function rToday(){

@@ -1,0 +1,20 @@
+{
+  "name": "奶油工作台 I'M FINE",
+  "short_name": "奶油工作台",
+  "description": "你的粉色奶油风个人工作台",
+  "lang": "zh-CN",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#FFF8EE",
+  "theme_color": "#E891A0",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
